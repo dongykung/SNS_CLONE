@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appName">SNS</string>
+    <string name="id">아이디</string>
+    <string name="password">비밀번호</string>
+    <string name="passwordconfirm">비밀번호 확인</string>
+
+    <string name="signup">회원가입</string>
+
+    <string name="welcome">SNS로 \n일상을 공유해보세요!</string>
+    <string name="noaccount">계정이 없으신가요?&#160;</string>
+    <string name="createaccount">계정생성</string>
+    <string name="login">로그인</string>
+    <string name="username">이름</string>
+    <string name="faillogin">로그인에 실패하였습니다.</string>
+
+    <string name="mypage">마이페이지</string>
+    <string name="editpage">프로필 수정</string>
+
+    <string name="nickname">닉네임</string>
+    <string name="status">상태 메시지</string>
+
+    <string name="imagechange">사진 수정</string>
+    <string name="newpost">새 게시물</string>
+    <string name="next">다음</string>
+    <string name="complete">완료</string>
+
+
+</resources>
