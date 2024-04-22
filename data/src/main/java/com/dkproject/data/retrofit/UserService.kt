@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface UserService {
 
@@ -29,4 +30,8 @@ interface UserService {
         @Body requestBody: RequestBody
     ):CommonResponse<Long>
 
+    @GET("api/users/{id}")
+    suspend fun userPage(
+        @Path("id") id:Long
+    ):CommonResponse<UserDTO>
 }
