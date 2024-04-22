@@ -16,6 +16,7 @@ import com.dkproject.presentation.util.showToastMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class EditProfileVIewModel @Inject constructor(
     companion object{
         const val TAG="EditProfileVIewModel"
     }
-    private val _state = MutableStateFlow(SettingUiState())
+    private val _state = MutableStateFlow(SettingUiState(emptyFlow()))
     val state: StateFlow<SettingUiState> = _state
     var profileChange by mutableStateOf(false)
 
