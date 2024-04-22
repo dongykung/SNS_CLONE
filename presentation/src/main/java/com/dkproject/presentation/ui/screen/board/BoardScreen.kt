@@ -66,7 +66,8 @@ import com.dkproject.presentation.util.formatElapsedTime
 fun BoardScreen(
     modifier: Modifier = Modifier,
     viewModel: BoardViewModel,
-    onClickUser: (Long) -> Unit
+    onClickUser: (Long) -> Unit,
+    onBoardDelete:(Long)->Unit,
 ) {
     val state = viewModel.state.collectAsState().value
     val items: LazyPagingItems<BoardCardModel> = state.boardItems.collectAsLazyPagingItems()
