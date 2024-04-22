@@ -13,4 +13,5 @@ data class Board(
     val updateUserId:Long,
     val updateUserName:String,
     val updateUserProfileFilePath:String,
+    val commentList:List<Comment>,
 )
