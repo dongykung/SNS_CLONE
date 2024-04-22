@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -57,7 +58,7 @@ fun WritingImageScreen(
             CenterAlignedTopAppBar(title = { Text(text = stringResource(id = R.string.newpost)) },
                 navigationIcon = {
                     IconButton(onClick = { writeexit() }) {
-                        Icon(imageVector = Icons.Outlined.Cancel, contentDescription = "")
+                        Icon(imageVector = Icons.Filled.Clear, contentDescription = "",tint=Color.White)
                     }
                 },
                 actions = {
