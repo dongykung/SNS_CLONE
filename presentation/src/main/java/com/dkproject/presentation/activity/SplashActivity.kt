@@ -10,10 +10,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,25 +27,41 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.dkproject.domain.usecase.token.GetTokenUseCase
+import com.dkproject.domain.usecase.user.GetUserInfoUseCase
 import com.dkproject.presentation.R
 import com.dkproject.presentation.ui.theme.SNS_CloneTheme
+import com.dkproject.presentation.util.Constants
+import com.dkproject.presentation.util.showToastMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashActivity:ComponentActivity() {
     @Inject
     lateinit var getTokenUseCaseImpl : GetTokenUseCase
-
+    @Inject
+    lateinit var getUserInfoUseCase: GetUserInfoUseCase
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             val isLoggedIn = !getTokenUseCaseImpl().isNullOrEmpty()
             if(isLoggedIn){
-               startActivity(Intent(this@SplashActivity,HomeActivity::class.java).apply {
-                   flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-               })
+                runBlocking {
+                    getUserInfoUseCase().onSuccess {
+                        Constants.myId = it.id
+                        startActivity(Intent(this@SplashActivity,HomeActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        })
+                    }.onFailure {
+                        showToastMessage(this@SplashActivity,"유저 정보를 가져올 수 없습니다")
+                        startActivity(Intent(this@SplashActivity,LoginActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        })
+                    }
+                }
             }else{
                 startActivity(Intent(this@SplashActivity,LoginActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -50,6 +71,7 @@ class SplashActivity:ComponentActivity() {
         setContent {
             SNS_CloneTheme {
                 Surface(modifier=Modifier.fillMaxSize(),color = Color(31,33,37)) {
+                        CircularProgressIndicator()
                     Column(modifier=Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Spacer(modifier = Modifier.height(200.dp))
@@ -64,24 +86,5 @@ class SplashActivity:ComponentActivity() {
     }
 }
 
-@Composable
-fun test(){
-    Surface(modifier=Modifier.fillMaxSize(),color = Color(31,33,37)) {
-        Column(modifier=Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(200.dp))
-            Text(text = stringResource(id = R.string.appName),
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color(21,239,201))
 
-        }
-    }
-}
 
-@Preview
-@Composable
-fun splashPreview(){
-    SNS_CloneTheme {
-        test()
-    }
-}
