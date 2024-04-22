@@ -2,6 +2,7 @@ package com.dkproject.presentation.ui.screen.setting
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -9,15 +10,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -36,18 +42,25 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
 import com.dkproject.presentation.R
 import com.dkproject.presentation.activity.EditProfileActivity
 import com.dkproject.presentation.activity.LoginActivity
+import com.dkproject.presentation.model.BoardCardModel
 import com.dkproject.presentation.ui.components.CustomImage
 import com.dkproject.presentation.ui.components.CustomTopAppBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScreen(viewModel: SettingViewModel = hiltViewModel()) {
+fun SettingScreen(viewModel: SettingViewModel) {
+    Log.d("SettingScreen", "SettingScreen: ")
     val state = viewModel.state.collectAsState().value
+    val items: LazyPagingItems<BoardCardModel> = state.boardItems.collectAsLazyPagingItems()
+
+
     val context = LocalContext.current
     val editProfileActivityLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
@@ -92,6 +105,8 @@ fun SettingScreen(viewModel: SettingViewModel = hiltViewModel()) {
                         })
                     }
                 )
+                Divider()
+                myBoardSection(myBoards = items)
             }
         }
     }
@@ -127,6 +142,37 @@ fun myInfoSection(
         Button(onClick = editClick) {
             Text(text = "편집", color = Color.Black)
         }
+    }
+}
+
+@Composable
+fun myBoardSection(
+    modifier: Modifier = Modifier,
+    myBoards: LazyPagingItems<BoardCardModel>
+) {
+    LazyVerticalGrid(
+        modifier = modifier,
+        columns = GridCells.Adaptive(110.dp)
+    ) {
+        items(count = myBoards.itemCount,key = {index->
+            myBoards[index]?.boardId ?:index
+        }){index->
+            myBoards[index]?.run {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .aspectRatio(1f),
+                    painter = rememberAsyncImagePainter(
+                        model = this.images.firstOrNull(),
+                        contentScale = ContentScale.Crop
+                    ),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+
     }
 }
 
