@@ -72,6 +72,12 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.SNS_Clone"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.dkproject.presentation.activity.UserProfileActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.SNS_Clone"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
