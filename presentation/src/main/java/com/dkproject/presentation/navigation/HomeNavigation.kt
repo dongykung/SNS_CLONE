@@ -1,5 +1,6 @@
 package com.dkproject.presentation.navigation
 
+import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -13,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dkproject.presentation.activity.UserProfileActivity
 import com.dkproject.presentation.ui.components.CustomBottomBar
 import com.dkproject.presentation.ui.components.HomeRoute
 import com.dkproject.presentation.ui.screen.board.BoardScreen
@@ -53,8 +55,10 @@ fun HomeScreenNavigation(
     val context = LocalContext.current
     NavHost(navController = navController, startDestination = HomeRoute.BOARD.route) {
         composable(route = HomeRoute.BOARD.route) {
-            BoardScreen(modifier = Modifier.padding(padding), boardViewModel, onClickUser = {
-
+            BoardScreen(modifier = Modifier.padding(padding), boardViewModel, onClickUser = {userId->
+                context.startActivity(Intent(context,UserProfileActivity::class.java).apply {
+                    putExtra("userId",userId)
+                })
             })
         }
         composable(route = HomeRoute.SETTING.route) {
