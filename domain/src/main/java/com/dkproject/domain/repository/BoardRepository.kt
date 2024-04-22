@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface BoardRepository {
     suspend operator fun invoke():Result<Flow<PagingData<Board>>>
+
+    suspend fun getMyBoard(myId:Long):Result<Flow<PagingData<Board>>>
 }

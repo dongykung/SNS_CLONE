@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.dkproject.data.RemoteDataSource.BoardDataSource
+import com.dkproject.data.RemoteDataSource.BoardMyPagingSource
 import com.dkproject.data.RemoteDataSource.BoardPagingSource
 import com.dkproject.domain.model.Board
 import com.dkproject.domain.repository.BoardRepository
@@ -20,6 +21,16 @@ class BoardRepositoryImpl @Inject constructor(
                 initialLoadSize = 10
             ),
             pagingSourceFactory = {BoardPagingSource(boardDataSource)}
+        ).flow
+    }
+
+    override suspend fun getMyBoard(myId: Long): Result<Flow<PagingData<Board>>>  = runCatching{
+        Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                initialLoadSize = 10
+            ),
+            pagingSourceFactory = {BoardMyPagingSource(boardDataSource,myId)}
         ).flow
     }
 }
