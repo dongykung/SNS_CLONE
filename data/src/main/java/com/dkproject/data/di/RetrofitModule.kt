@@ -15,7 +15,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
-val BASE_URL = "http://192.168.35.158:8080"
+val BASE_URL = "http://192.168.35.44:8080"
 
 @Module
 @InstallIn(SingletonComponent::class)
