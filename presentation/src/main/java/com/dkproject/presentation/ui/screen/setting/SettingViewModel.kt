@@ -1,21 +1,18 @@
 package com.dkproject.presentation.ui.screen.setting
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.dkproject.domain.model.User
 import com.dkproject.domain.usecase.board.GetMyBoardUseCase
 import com.dkproject.domain.usecase.token.ClearTokenUseCase
-import com.dkproject.domain.usecase.user.GetUserInfoUseCase
+import com.dkproject.domain.usecase.user.GetMyInfoUseCase
 import com.dkproject.presentation.model.BoardCardModel
 import com.dkproject.presentation.model.toUiModel
 import com.dkproject.presentation.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getUserInfoUseCase: GetMyInfoUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
     private val getMyBoardUseCase: GetMyBoardUseCase
 ) : ViewModel() {
@@ -90,6 +87,7 @@ class SettingViewModel @Inject constructor(
 
 data class SettingUiState(
     val boardItems: Flow<PagingData<BoardCardModel>>,
+    val deletedBoardItems:Set<Long> = emptySet(),
     val userId:Long? = null,
     val profileImageUrl: String? = null,
     val username: String = "",

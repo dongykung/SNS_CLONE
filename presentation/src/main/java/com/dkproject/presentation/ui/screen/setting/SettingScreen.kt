@@ -51,6 +51,7 @@ import com.dkproject.presentation.activity.LoginActivity
 import com.dkproject.presentation.model.BoardCardModel
 import com.dkproject.presentation.ui.components.CustomImage
 import com.dkproject.presentation.ui.components.CustomTopAppBar
+import com.dkproject.presentation.util.Constants
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,30 +69,28 @@ fun SettingScreen(viewModel: SettingViewModel) {
                 viewModel.load()
             }
         }
-    Scaffold(topBar = {
-        CustomTopAppBar(title = stringResource(id = R.string.mypage),
-            action = true,
-            actionIcon = Icons.AutoMirrored.Outlined.ExitToApp,
-            actionClick = {
-                viewModel.logOut {
-                    context.startActivity(Intent(context, LoginActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    })
-                }
-            })
-    }) { innerPadding ->
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
+    Surface(modifier=Modifier.fillMaxSize()) {
+        Scaffold(topBar = {
+            CustomTopAppBar(title = stringResource(id = R.string.mypage),
+                action = true,
+                actionIcon = Icons.AutoMirrored.Outlined.ExitToApp,
+                actionClick = {
+                    viewModel.logOut {
+                        context.startActivity(Intent(context, LoginActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        })
+                    }
+                })
+        }) { innerPadding ->
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 6.dp)
+                    .padding(innerPadding)
             ) {
-                myInfoSection(
+                InfoSection(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    userId = state.userId,
                     profileUrl = state.profileImageUrl.toString(),
                     username = state.username, statusmsg = state.statusMessage,
                     editClick = {
@@ -106,19 +105,21 @@ fun SettingScreen(viewModel: SettingViewModel) {
                     }
                 )
                 Divider()
-                myBoardSection(myBoards = items)
+                BoardSection(myBoards = items, deleteBoardList = state.deletedBoardItems)
             }
         }
     }
 }
 
+
 @Composable
-fun myInfoSection(
+fun InfoSection(
     modifier: Modifier = Modifier,
+    userId:Long?,
     profileUrl: String,
     username: String,
     statusmsg: String,
-    editClick: () -> Unit,
+    editClick: () -> Unit = {},
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         //profile Image
@@ -139,6 +140,7 @@ fun myInfoSection(
         }
         Spacer(modifier = Modifier.weight(1f))
         //edit profile button
+        if(userId == Constants.myId)
         Button(onClick = editClick) {
             Text(text = "편집", color = Color.Black)
         }
@@ -146,18 +148,20 @@ fun myInfoSection(
 }
 
 @Composable
-fun myBoardSection(
+fun BoardSection(
     modifier: Modifier = Modifier,
-    myBoards: LazyPagingItems<BoardCardModel>
+    myBoards: LazyPagingItems<BoardCardModel>,
+    deleteBoardList : Set<Long>,
 ) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Adaptive(110.dp)
     ) {
-        items(count = myBoards.itemCount,key = {index->
-            myBoards[index]?.boardId ?:index
-        }){index->
+        items(count = myBoards.itemCount, key = { index ->
+            myBoards[index]?.boardId ?: index
+        }) { index ->
             myBoards[index]?.run {
+                if(!deleteBoardList.contains(this.boardId))
                 Image(
                     modifier = Modifier
                         .fillMaxWidth()
