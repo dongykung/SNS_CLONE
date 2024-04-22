@@ -5,9 +5,11 @@ import com.dkproject.data.RemoteDataSource.BoardRemoteDataSource
 import com.dkproject.data.repository.board.BoardRepositoryImpl
 import com.dkproject.data.usecase.board.DeleteBoardUseCaseImpl
 import com.dkproject.data.usecase.board.GetBoardListUseCaseImpl
+import com.dkproject.data.usecase.board.GetMyBoardListUseCaseImpl
 import com.dkproject.domain.repository.BoardRepository
 import com.dkproject.domain.usecase.board.DeleteBoardUseCase
 import com.dkproject.domain.usecase.board.GetBoardListUseCase
+import com.dkproject.domain.usecase.board.GetMyBoardUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,4 +31,7 @@ abstract class BoardModule {
 
     @Binds
     abstract fun bindDeleteBoardUseCase(uc:DeleteBoardUseCaseImpl):DeleteBoardUseCase
+
+    @Binds
+    abstract fun bindGetMYBoarddUseCase(uc:GetMyBoardListUseCaseImpl):GetMyBoardUseCase
 }

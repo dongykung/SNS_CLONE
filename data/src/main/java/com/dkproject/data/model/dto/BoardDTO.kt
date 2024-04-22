@@ -18,6 +18,7 @@ data class BoardDTO(
     val updateUserId:Long,
     val updateUserName:String,
     val updateUserProfileFilePath:String,
+    val commentList:List<CommentDTO>,
 ){
     fun toDomainModel():Board{
         val contentParam = Json .decodeFromString<ContentParam>(content)
@@ -32,7 +33,8 @@ data class BoardDTO(
             createUserProfileFilePath = createUserProfileFilePath,
             updateUserId=updateUserId,
             updateUserName=updateUserName,
-            updateUserProfileFilePath=updateUserProfileFilePath
+            updateUserProfileFilePath=updateUserProfileFilePath,
+            commentList = commentList.map { it.todomainModel() }
         )
     }
 }
