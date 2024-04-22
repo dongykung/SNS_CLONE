@@ -53,6 +53,7 @@ fun WritingTextScreen(
     onBackClick: () -> Unit,
     postDone:()->Unit
 ) {
+    Log.d("WritingTextScreen", "WritingTextScreen: ")
     val state = viewModel.state.collectAsState().value
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(topBar = {
@@ -110,11 +111,11 @@ fun ImagePager(
     modifier: Modifier = Modifier,
     imageList: List<String>
 ) {
-
+    Log.d("ImagePager", "ImagePager: ")
     val pagerState = rememberPagerState {
         imageList.size
     }
-    Log.d("ImagePager", imageList.toString())
+
     Box(modifier = modifier) {
         HorizontalPager(state = pagerState) { page ->
             val image = imageList[page]
@@ -133,7 +134,7 @@ fun ImagePager(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            repeat(pagerState.pageCount) { index ->
+           imageList.forEachIndexed  { index,it->
                 val color = if (pagerState.currentPage == index) Color.DarkGray else Color.LightGray
                 Box(
                     modifier = Modifier

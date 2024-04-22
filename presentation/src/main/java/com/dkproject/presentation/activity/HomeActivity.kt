@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.dkproject.domain.model.ACTION_POSTED
 import com.dkproject.presentation.navigation.HomeNavigation
 import com.dkproject.presentation.ui.screen.board.BoardViewModel
+import com.dkproject.presentation.ui.screen.setting.SettingViewModel
 import com.dkproject.presentation.ui.theme.SNS_CloneTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,10 +23,14 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
     private val boardViewModel: BoardViewModel by viewModels()
+    private val settingViewModel:SettingViewModel by viewModels()
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_POSTED) {
                 boardViewModel.load()
+               if(settingViewModel.state.value.userId!=null){
+                   settingViewModel.getMyBoard(settingViewModel.state.value.userId!!)
+               }
             }
         }
     }
@@ -34,7 +39,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SNS_CloneTheme {
-                HomeNavigation(boardViewModel)
+                HomeNavigation(boardViewModel,settingViewModel)
             }
         }
         ContextCompat.registerReceiver(

@@ -94,7 +94,8 @@ fun SNS_CloneTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content,
+        typography = Typography
     )
 }
 //private val DarkColorScheme = darkColorScheme(
