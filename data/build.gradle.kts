@@ -59,7 +59,7 @@ dependencies {
     //service
     implementation(libs.lifecycle.service)
 
-    //paging3
+    //paging
     implementation(libs.androidx.paging.runtime)
 
     implementation(libs.androidx.core.ktx)

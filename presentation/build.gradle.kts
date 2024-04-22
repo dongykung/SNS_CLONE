@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.compose)
 
-    //paging3
+    //paging
     implementation(libs.androidx.paging.compose)
 
     //icons
