@@ -2,10 +2,8 @@ package com.dkproject.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,20 +12,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.dkproject.domain.usecase.token.GetTokenUseCase
-import com.dkproject.domain.usecase.user.GetUserInfoUseCase
+import com.dkproject.domain.usecase.user.GetMyInfoUseCase
 import com.dkproject.presentation.R
 import com.dkproject.presentation.ui.theme.SNS_CloneTheme
 import com.dkproject.presentation.util.Constants
@@ -42,7 +34,7 @@ class SplashActivity:ComponentActivity() {
     @Inject
     lateinit var getTokenUseCaseImpl : GetTokenUseCase
     @Inject
-    lateinit var getUserInfoUseCase: GetUserInfoUseCase
+    lateinit var getUserInfoUseCase: GetMyInfoUseCase
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
