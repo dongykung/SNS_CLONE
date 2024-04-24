@@ -50,7 +50,7 @@ fun UserProfileScreen(
                     statusmsg = state.statusMessage
                 )
                 Divider()
-                BoardSection(myBoards = items)
+                BoardSection(myBoards = items, deleteBoardList = state.deletedBoardItems)
             }
         }
     }
