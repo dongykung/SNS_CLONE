@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,8 +68,9 @@ fun BoardScreen(
     modifier: Modifier = Modifier,
     viewModel: BoardViewModel,
     onClickUser: (Long) -> Unit,
-    onBoardDelete:(Long)->Unit,
+    onBoardDelete: (Long) -> Unit,
 ) {
+    val context = LocalContext.current
     val state = viewModel.state.collectAsState().value
     val items: LazyPagingItems<BoardCardModel> = state.boardItems.collectAsLazyPagingItems()
     Log.d("BoardScreen", items.toString())
@@ -78,7 +80,7 @@ fun BoardScreen(
     var modelDialog: BoardCardModel? by remember { mutableStateOf(null) }
 
     CustomBottomSheet(model = modelDialog, dismiss = { modelDialog = null }, onBoardDelte = {
-        viewModel.onBoardDelete(it.boardId)
+        onBoardDelete(it.boardId)
     })
 
 
@@ -106,11 +108,18 @@ fun BoardScreen(
                                     images = this.images,
                                     createdAt = this.createAt,
                                     text = this.text,
-                                    comments = this.commentList,
+                                    comments = (this.commentList + state.addedComments[boardId].orEmpty())-state.deletedComments[boardId].orEmpty(),
                                     onOptionClick = {
                                         modelDialog = this
                                     },
-                                    onClickUser = onClickUser)
+                                    onCommentSend = {
+                                        viewModel.onCommentSend(this.boardId, it)
+                                    },
+                                    onClickUser = onClickUser,
+                                    onCommentDelete = {comment->
+                                        viewModel.onDeleteComment(this.boardId,comment,context)
+                                    }
+                                )
                         }
                     }
 
@@ -130,7 +139,9 @@ fun BoardCard(
     text: String,
     createdAt: String,
     comments: List<Comment>,
-    onClickUser:(Long)->Unit,
+    onClickUser: (Long) -> Unit,
+    onCommentSend: (String) -> Unit,
+    onCommentDelete :(Comment)->Unit,
     onOptionClick: () -> Unit,
 ) {
     Log.d("BoardCard", userId.toString())
@@ -191,19 +202,24 @@ fun BoardCard(
             Text(text = "댓글")
         }
     }
-    CommentDialog(visible = commentDialogVisible,
-        comments = comments,
-        onDismiss = { commentDialogVisible = false },
-        onCloseClick = { commentDialogVisible = false },
-        onClickUser = onClickUser)
+    if (commentDialogVisible)
+        CommentDialog(
+            visible = commentDialogVisible,
+            comments = comments,
+            onDismiss = { commentDialogVisible = false },
+            onCloseClick = { commentDialogVisible = false },
+            onCommentSend = onCommentSend,
+            onClickUser = onClickUser,
+            onCommentDelete = onCommentDelete
+        )
 }
 
 @Composable
 fun BoarderHeader(
     modifier: Modifier = Modifier,
-    userId:Long,
+    userId: Long,
     profileImageUrl: String,
-    createdAt:String,
+    createdAt: String,
     username: String,
     onClickUser: (Long) -> Unit,
     onOptionClick: () -> Unit,
@@ -227,12 +243,17 @@ fun BoarderHeader(
             Text(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 text = username,
-                style  = TextStyle(color=Color.White, fontSize = 18.sp,fontWeight = FontWeight.Bold),
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                ),
                 color = Color.White
             )
-            Text(modifier = Modifier.padding(horizontal = 8.dp),
+            Text(
+                modifier = Modifier.padding(horizontal = 8.dp),
                 text = formatElapsedTime(createdAt),
-                style = TextStyle(color=Color.White, fontSize = 14.sp)
+                style = TextStyle(color = Color.White, fontSize = 14.sp)
             )
         }
         Spacer(modifier = Modifier.weight(1f))
