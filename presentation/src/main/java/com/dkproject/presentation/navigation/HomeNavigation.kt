@@ -28,6 +28,7 @@ import com.dkproject.presentation.ui.screen.setting.SettingViewModel
 fun HomeNavigation(
     boardViewModel: BoardViewModel,
     settingViewModel: SettingViewModel,
+    onBoardDelete: (Long) -> Unit,
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(
@@ -39,7 +40,8 @@ fun HomeNavigation(
             navController = navController,
             padding = innerPadding,
             boardViewModel = boardViewModel,
-            settingViewModel = settingViewModel
+            settingViewModel = settingViewModel,
+            onBoardDelete = onBoardDelete
         )
     }
 }
@@ -49,17 +51,22 @@ fun HomeScreenNavigation(
     navController: NavHostController,
     padding: PaddingValues,
     boardViewModel: BoardViewModel,
-    settingViewModel: SettingViewModel
+    settingViewModel: SettingViewModel,
+    onBoardDelete:(Long)->Unit,
 ) {
 
     val context = LocalContext.current
     NavHost(navController = navController, startDestination = HomeRoute.BOARD.route) {
         composable(route = HomeRoute.BOARD.route) {
-            BoardScreen(modifier = Modifier.padding(padding), boardViewModel, onClickUser = {userId->
-                context.startActivity(Intent(context,UserProfileActivity::class.java).apply {
-                    putExtra("userId",userId)
-                })
-            })
+            BoardScreen(
+                modifier = Modifier.padding(padding),
+                boardViewModel,
+                onClickUser = { userId ->
+                    context.startActivity(Intent(context, UserProfileActivity::class.java).apply {
+                        putExtra("userId", userId)
+                    })
+                },
+                onBoardDelete = onBoardDelete)
         }
         composable(route = HomeRoute.SETTING.route) {
             //val viewModel : SettingViewModel = hiltViewModel()
