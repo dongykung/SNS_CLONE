@@ -44,6 +44,8 @@ class SplashActivity:ComponentActivity() {
                 runBlocking {
                     getUserInfoUseCase().onSuccess {
                         Constants.myId = it.id
+                        Constants.myProfileUrl=it.profileFilePath.toString()
+                        Constants.myName=it.userName
                         startActivity(Intent(this@SplashActivity,HomeActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         })
