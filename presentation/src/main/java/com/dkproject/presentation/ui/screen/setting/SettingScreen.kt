@@ -69,7 +69,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
                 viewModel.load()
             }
         }
-    Surface(modifier=Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(topBar = {
             CustomTopAppBar(title = stringResource(id = R.string.mypage),
                 action = true,
@@ -115,7 +115,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
 @Composable
 fun InfoSection(
     modifier: Modifier = Modifier,
-    userId:Long?,
+    userId: Long?,
     profileUrl: String,
     username: String,
     statusmsg: String,
@@ -140,10 +140,10 @@ fun InfoSection(
         }
         Spacer(modifier = Modifier.weight(1f))
         //edit profile button
-        if(userId == Constants.myId)
-        Button(onClick = editClick) {
-            Text(text = "편집", color = Color.Black)
-        }
+        if (userId == Constants.myId)
+            Button(onClick = editClick) {
+                Text(text = "편집", color = Color.Black)
+            }
     }
 }
 
@@ -151,7 +151,7 @@ fun InfoSection(
 fun BoardSection(
     modifier: Modifier = Modifier,
     myBoards: LazyPagingItems<BoardCardModel>,
-    deleteBoardList : Set<Long>,
+    deleteBoardList: Set<Long>,
 ) {
     LazyVerticalGrid(
         modifier = modifier,
@@ -161,19 +161,19 @@ fun BoardSection(
             myBoards[index]?.boardId ?: index
         }) { index ->
             myBoards[index]?.run {
-                if(!deleteBoardList.contains(this.boardId))
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .aspectRatio(1f),
-                    painter = rememberAsyncImagePainter(
-                        model = this.images.firstOrNull(),
+                if (!deleteBoardList.contains(this.boardId))
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .aspectRatio(1f),
+                        painter = rememberAsyncImagePainter(
+                            model = this.images.firstOrNull(),
+                            contentScale = ContentScale.Crop
+                        ),
+                        contentDescription = null,
                         contentScale = ContentScale.Crop
-                    ),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
+                    )
             }
         }
 

@@ -11,6 +11,7 @@ import com.dkproject.domain.usecase.token.ClearTokenUseCase
 import com.dkproject.domain.usecase.user.GetMyInfoUseCase
 import com.dkproject.presentation.model.BoardCardModel
 import com.dkproject.presentation.model.toUiModel
+import com.dkproject.presentation.ui.screen.board.BoardViewModel
 import com.dkproject.presentation.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +49,9 @@ class SettingViewModel @Inject constructor(
                     url = user.profileFilePath.toString(),
                     stmsg = user.extraUserInfo
                 )
-                Constants.myId=user.id
+                Constants.myId = user.id
+                Constants.myProfileUrl=user.profileFilePath.toString()
+                Constants.myName=user.userName
                 getMyBoard(user.id)
             }.onFailure {
 
@@ -60,8 +63,8 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             val boardCardModelFlow: Flow<PagingData<BoardCardModel>>
             getMyBoardUseCase(userId).onSuccess {
-                boardCardModelFlow = it.map {pagingData->
-                    pagingData.map { board->
+                boardCardModelFlow = it.map { pagingData ->
+                    pagingData.map { board ->
                         board.toUiModel()
                     }
                 }.cachedIn(viewModelScope)
@@ -72,8 +75,15 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun updateState(id:Long ,name: String, url: String, stmsg: String) {
-        _state.update { it.copy(userId = id, profileImageUrl = url, username = name, statusMessage = stmsg) }
+    fun updateState(id: Long, name: String, url: String, stmsg: String) {
+        _state.update {
+            it.copy(
+                userId = id,
+                profileImageUrl = url,
+                username = name,
+                statusMessage = stmsg
+            )
+        }
     }
 
     fun logOut(moveToLogin: () -> Unit) {
@@ -82,13 +92,19 @@ class SettingViewModel @Inject constructor(
             moveToLogin()
         }
     }
+
+    fun onBoardDelete(boardId: Long) {
+        viewModelScope.launch {
+            _state.update { it.copy(deletedBoardItems = state.value.deletedBoardItems + boardId) }
+        }
+    }
 }
 
 
 data class SettingUiState(
     val boardItems: Flow<PagingData<BoardCardModel>>,
-    val deletedBoardItems:Set<Long> = emptySet(),
-    val userId:Long? = null,
+    val deletedBoardItems: Set<Long> = emptySet(),
+    val userId: Long? = null,
     val profileImageUrl: String? = null,
     val username: String = "",
     val statusMessage: String = ""
