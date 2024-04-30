@@ -1,7 +1,7 @@
 
 
 ### _SNS_
-  local Server(H2 database) 를 이용해 Retrofit 통신
+  local Server(H2 database) 를 이용한 Retrofit 통신
 <br>
 <div>
 <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white">
@@ -12,7 +12,7 @@
 
 <br> 
 
-##  기능소개
+##  주요 화면
 
 |스플래쉬|로그인|
 |------|---|
